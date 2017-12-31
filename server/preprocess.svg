@@ -27,55 +27,72 @@
 <path id="wind" d="M62.781,0.0062768c-1.621,0.18889-7.737,6.4392-19.093,25.311,3.0187,0.032,5.663,1.6919,7.0938,4.1247,11.41-20.557,13.346-28.772,12.25-29.404-0.0685-0.039435-0.14194-0.043841-0.25-0.031248zm-19.187,29.467c-2.2942,0-4.1562,1.8647-4.1562,4.156s1.862,4.156,4.1562,4.156,4.1562-1.8647,4.1562-4.156-1.862-4.156-4.1562-4.156zm-7.2188,0.0625c-23.477,0.41497-31.531,2.8316-31.531,4.0935,0,1.2609,8.0532,3.6795,31.531,4.0935-0.68785-1.2069-1.0938-2.6066-1.0938-4.0935,0-1.4859,0.40594-2.8856,1.0938-4.0935zm14.406,8.2495c-1.4238,2.4358-4.0448,4.0887-7.0625,4.1247,12.105,20.107,18.216,25.878,19.312,25.248,1.0943-0.63196-0.84705-8.8283-12.25-29.373zm-50.468,2.062c-0.063218-0.0073-0.11601,0.0082-0.15625,0.03125-0.6438,0.373,0.50625,5.156,7.0312,16.999,0.9162-1.38,2.4383-2.304,4.1875-2.438-6.5661-10.832-10.114-14.483-11.062-14.592zm65.062,0c-0.06321-0.0073-0.11601,0.0082-0.15625,0.03125-0.643,0.37298,0.50625,5.1567,7.0312,16.999,0.9172-1.3799,2.4393-2.3034,4.1875-2.4373-6.566-10.833-10.113-14.484-11.061-14.593zm-25.938,3.0311,0,57.121,8.3125,0,0-43.935c-2.379-3.518-5.134-7.856-8.31-13.186zm-27.655,14.28c-1.5295,0-2.75,1.2223-2.75,2.7498s1.2205,2.7811,2.75,2.7811,2.7812-1.2536,2.7812-2.7811-1.2518-2.7498-2.7812-2.7498zm65.094,0c-1.5295,0-2.7812,1.2223-2.7812,2.7498s1.2518,2.7811,2.7812,2.7811c1.5295,0,2.7812-1.2536,2.7812-2.7811s-1.2518-2.7498-2.7812-2.7498zm-60.125,0.344c0.35844,0.73095,0.59375,1.5372,0.59375,2.4061,0,0.87594-0.2293,1.7014-0.59375,2.4373,13.471-0.28298,18.156-1.6671,18.156-2.4061,0-0.74195-4.6902-2.1544-18.156-2.4373zm65.094,0c0.35744,0.73095,0.5625,1.5372,0.5625,2.4061,0,0.87594-0.20306,1.7014-0.5625,2.4373,13.471-0.283,18.156-1.667,18.156-2.406,0-0.742-4.69-2.154-18.156-2.437zm-74.656,5.468c-6.523,11.842-7.675,16.627-7.0312,16.999,0.644,0.371,4.2152-3.01,11.219-14.562-1.7502-0.135-3.2694-1.056-4.1875-2.437zm65.062,0c-6.524,11.842-7.675,16.623-7.031,16.999,0.643,0.37,4.216-3.007,11.219-14.562-1.752-0.135-3.27-1.056-4.188-2.437zm-57.688,2.5311c-2.15,3.6138-3.9764,6.4613-5.5312,8.7182l-0.0308,25.78h5.5312l0.03125-34.498zm65.094,0c-2.1496,3.6137-4.0086,6.4613-5.5625,8.7182v25.78h5.5312l0.03125-34.498z"/>
 </defs>
 
-<g transform="scale(3.25) translate(5.055 20.166)">
+<g transform="scale(3) translate(15 15)">
 <use xlink:href="#ICON_ONE"/>
 </g>
 
-<g transform="scale(1.2) translate(34.167 399.725)">
+<g transform="scale(1.2) translate(34.167 390)">
 <use xlink:href="#ICON_TWO"/>
 </g>
-<g transform="scale(1.2) translate(200 399.725)">
+<g transform="scale(1.2) translate(200 390)">
 <use xlink:href="#ICON_THREE"/>
 </g>
-<g transform="scale(1.2) translate(365.833 399.725)">
+<g transform="scale(1.2) translate(365.833 390)">
 <use xlink:href="#ICON_FOUR"/>
 </g>
 
 <g font-family="DejaVu Sans">
-<text style="text-anchor:middle;" font-size="35px" y="52.256058" x="76.039063">Today:</text>
-<text style="text-anchor:middle;" font-size="35px" y="121.70689" x="446.26932">High:</text>
-<text style="text-anchor:end;" font-size="100px" y="209.20592" x="526.72095">HIGH_ONE</text>
-<text style="text-anchor:middle;" font-size="64px" y="182.48717" x="548.30981">°F</text>
-<text style="text-anchor:middle;" font-size="35px" y="275.13895" x="440.80057">Low:</text>
-<text style="text-anchor:end;" font-size="100px" y="359.8533" x="526.23267">LOW_ONE</text>
-<text style="text-anchor:middle;" font-size="64px" y="333.13455" x="548.30981">°F</text>
 
-<text style="text-anchor:middle;" font-size="32px" y="465.16922" x="102.92969">Tomorrow:</text>
-<text style="text-anchor:middle;" font-size="20px" y="635.68347" x="74.958336">High:</text>
-<text style="text-anchor:end;" font-size="58px" y="686.3255" x="116.05887">HIGH_TWO</text>
-<text style="text-anchor:middle;" font-size="37px" y="670.86145" x="134.01662">°F</text>
-<text style="text-anchor:middle;" font-size="20px" y="724.48578" x="71.906197">Low:</text>
-<text style="text-anchor:end;" font-size="58px" y="773.51617" x="116.00232">LOW_TWO</text>
-<text style="text-anchor:middle;" font-size="37px" y="758.05206" x="134.01663">°F</text>
+<text style="text-anchor:start;" font-size="35px" y="40" x="410">Currently:</text>
+<text style="text-anchor:end;" font-size="90px" y="120" x="530">TEMP_NOW</text>
+<text style="text-anchor:start;" font-size="50px" y="95" x="525">°F</text>
+<text style="text-anchor:start;" font-size="35px" y="170" x="410">High:</text>
+<text style="text-anchor:end;" font-size="90px" y="250" x="530">HIGH_ONE</text>
+<text style="text-anchor:start;" font-size="50px" y="225" x="525">°F</text>
+<text style="text-anchor:start;" font-size="35px" y="300" x="410">Low:</text>
+<text style="text-anchor:end;" font-size="90px" y="380" x="530">LOW_ONE</text>
+<text style="text-anchor:start;" font-size="50px" y="355" x="525">°F</text>
 
-<text style="text-anchor:middle;" font-size="32px" y="466.15359" x="300.3125">DAY_THREE:</text>
-<text style="text-anchor:middle;" font-size="20px" y="635.68347" x="273.95834">High:</text>
-<text style="text-anchor:end;" font-size="58px" y="686.3255" x="314.15454">HIGH_THREE</text>
-<text style="text-anchor:middle;" font-size="37px" y="670.86145" x="333.01663">°F</text>
-<text style="text-anchor:middle;" font-size="20px" y="724.48578" x="270.90619">Low:</text>
-<text style="text-anchor:end;" font-size="58px" y="773.51617" x="314.08383">LOW_THREE</text>
-<text style="text-anchor:middle;" font-size="37px" y="758.05206" x="333.0166">°F</text>
+<text style="text-anchor:middle;" font-size="30px" y="450" x="100">DAY_TWO</text>
+<text style="text-anchor:start;" font-size="20px" y="615" x="40">High:</text>
+<text style="text-anchor:end;" font-size="58px" y="665" x="115">HIGH_TWO</text>
+<text style="text-anchor:start;" font-size="37px" y="651" x="112">°F</text>
+<text style="text-anchor:start;" font-size="20px" y="695" x="40">Low:</text>
+<text style="text-anchor:end;" font-size="58px" y="745" x="115">LOW_TWO</text>
+<text style="text-anchor:start;" font-size="37px" y="731" x="112">°F</text>
 
-<text style="text-anchor:middle;" font-size="32px" y="466.15359" x="499.82813">DAY_FOUR:</text>
-<text style="text-anchor:middle;" font-size="20px" y="635.68347" x="472.95834">High:</text>
-<text style="text-anchor:end;" font-size="58px" y="686.3255" x="513.30994">HIGH_FOUR</text>
-<text style="text-anchor:middle;" font-size="37px" y="670.86145" x="532.0166">°F</text>
-<text style="text-anchor:middle;" font-size="20px" y="724.48578" x="469.90619">Low:</text>
-<text style="text-anchor:end;" font-size="58px" y="773.51617" x="513.73383">LOW_FOUR</text>
-<text style="text-anchor:middle;" font-size="37px" y="758.05206" x="532.0166">°F</text>
+<text style="text-anchor:middle;" font-size="30px" y="450" x="300">DAY_THREE</text>
+<text style="text-anchor:start;" font-size="20px" y="615" x="240">High:</text>
+<text style="text-anchor:end;" font-size="58px" y="665" x="315">HIGH_THREE</text>
+<text style="text-anchor:start;" font-size="37px" y="651" x="312">°F</text>
+<text style="text-anchor:start;" font-size="20px" y="695" x="240">Low:</text>
+<text style="text-anchor:end;" font-size="58px" y="745" x="315">LOW_THREE</text>
+<text style="text-anchor:start;" font-size="37px" y="731" x="312">°F</text>
+
+<text style="text-anchor:middle;" font-size="30px" y="450" x="500">DAY_FOUR</text>
+<text style="text-anchor:start;" font-size="20px" y="615" x="440">High:</text>
+<text style="text-anchor:end;" font-size="58px" y="665" x="515">HIGH_FOUR</text>
+<text style="text-anchor:start;" font-size="37px" y="651" x="512">°F</text>
+<text style="text-anchor:start;" font-size="20px" y="695" x="440">Low:</text>
+<text style="text-anchor:end;" font-size="58px" y="745" x="515">LOW_FOUR</text>
+<text style="text-anchor:start;" font-size="37px" y="731" x="512">°F</text>
+
+<text style="text-anchor:middle;" font-size="15px" y="780" x="300">Darksky Forecast as of: DATE_STRING</text>
 </g>
 
-<path d="m199,447.35,0,321.5,3,0,0-321.5-3,0z"/>
-<path d="m398,447.35,0,321.5,3,0,0-321.5-3,0z"/>
+<path d="M10,30 a1,1 0 1,1 30,0z" stroke='black' stroke-width="3" fill="none"/>
+<path d="M260,15 a1,1 0 1,0 30,0z"/>
+<path d="M25,360 a1,1 0 1,0 0,25 a20,20 0 0,1 0,-25 z" stroke='black' stroke-width="3" fill="none"/>
+<path d="M250,365 l10,0 a1,1 0 1,0 0,-7 m-10,15 l15,0 a1,1 0 1,0 0,-7 m-15,15 l20,0 a1,1 0 1,0 0,-7" stroke='black' stroke-width='3' fill='none'/>
+
+<g font-family="DejaVu Sans">
+<text style="text-anchor:start;" font-size="20px" y="30" x="50">SUNRISE</text>
+<text style="text-anchor:start;" font-size="20px" y="30" x="300">SUNSET</text>
+<text style="text-anchor:start;" font-size="20px" y="380" x="35">MOON_PHASE</text>
+<text style="text-anchor:start;" font-size="20px" y="380" x="280">WIND_SPEEDmph, WIND_DIR°</text>
+</g>
+
+<path d="m200,450,0,300,3,0,0-300-3,0z"/>
+<path d="m400,450,0,300,3,0,0-300-3,0z"/>
 
 </svg>

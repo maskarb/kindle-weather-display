@@ -1,9 +1,17 @@
-FROM python:3
+FROM golang:1.9.2 as builder
 
-RUN apt-get update \
-  && apt-get install -y librsvg2-bin pngcrush \
-  && apt-get clean
+ADD main.go /go/
 
-ADD weather-script.sh weather-script.py weather-script-preprocess.svg /src/
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -installsuffix cgo -o weather-script .
 
-CMD ["/src/weather-script.sh"]
+FROM alpine
+
+WORKDIR /opt
+
+RUN apk add --no-cache ca-certificates librsvg pngcrush ttf-dejavu
+
+COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
+COPY --from=builder /go/weather-script /opt/
+ADD weather-script.sh preprocess.svg /opt/
+
+CMD ["/opt/weather-script.sh"]
