@@ -1,17 +1,26 @@
-FROM golang:1.9.2 as builder
+FROM golang:1.15 as builder
 
-ADD main.go /go/
+WORKDIR /workspace
 
-RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -a -installsuffix cgo -o weather-script .
+COPY go.mod go.mod
+COPY go.sum go.sum
+RUN go mod download
+
+COPY .env .env
+COPY main.go main.go
+COPY preprocess.svg preprocess.svg
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o weather-script .
 
 FROM alpine
 
 WORKDIR /opt
 
-RUN apk add --no-cache ca-certificates librsvg pngcrush ttf-dejavu
+RUN apk add --no-cache ca-certificates librsvg
 
 COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
-COPY --from=builder /go/weather-script /opt/
-ADD weather-script.sh preprocess.svg /opt/
+COPY --from=builder /workspace/weather-script /opt/
+COPY --from=builder /workspace/preprocess.svg /opt/
+COPY --from=builder /workspace/.env /opt/
 
-CMD ["/opt/weather-script.sh"]
+CMD ["/opt/weather-script"]
