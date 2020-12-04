@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  kindle:
+    image: kindle
+    environment:
+        - CLIMACELL_API_KEY=${CLIMACELL_API_KEY}
+        - LATITUDE=35.816735
+        - LONGITUDE=-78.613375
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 53084:53084

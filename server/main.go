@@ -5,17 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/http"
 	"os"
 	"os/exec"
-	"os/signal"
 	"strconv"
 	"strings"
-	"sync"
-	"syscall"
 	"time"
 
 	"github.com/andyhaskell/climacell-go"
-	"github.com/joho/godotenv"
 )
 
 var (
@@ -63,14 +60,19 @@ var (
 	}
 )
 
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Print("no .env file found")
+func getEnvString(key string, defaultVal string) string {
+	valueStr, exists := os.LookupEnv(key)
+	if !exists {
+		log.Printf("env variable %s not defined", key)
 	}
+	return valueStr
 }
 
 func getEnvAsFloat64(key string, defaultVal float64) float64 {
-	valueStr := os.Getenv(key)
+	valueStr, exists := os.LookupEnv(key)
+	if !exists {
+		log.Printf("env variable %s not defined", key)
+	}
 	if value, err := strconv.ParseFloat(valueStr, 64); err == nil {
 		return value
 	}
@@ -78,47 +80,35 @@ func getEnvAsFloat64(key string, defaultVal float64) float64 {
 }
 
 func main() {
-	sigs := make(chan os.Signal, 1)
-	done := make(chan bool)
-	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
-	wg := &sync.WaitGroup{}
-	wg.Add(2)
-
 	var c *climacell.Client
-	c = climacell.New(os.Getenv("CLIMACELL_API_KEY"))
+	c = climacell.New(getEnvString("CLIMACELL_API_KEY", ""))
 	loc := &climacell.LatLon{
 		Lat: getEnvAsFloat64("LATITUDE", 0),
 		Lon: getEnvAsFloat64("LONGITUDE", 0),
 	}
 
 	if err := genFile(c, loc); err != nil {
-		log.Printf("output is jacked, probably")
+		log.Printf("output is jacked, probably: %v", err)
 	}
 
 	ticker := time.NewTicker(60 * time.Second)
 
-	go func(wg *sync.WaitGroup) {
+	go func() {
 		for {
 			select {
-			case <-done:
-				wg.Done()
-				return
 			case <-ticker.C:
 				if err := genFile(c, loc); err != nil {
-					log.Printf("output is jacked, probably")
+					log.Printf("output is jacked, probably: %v", err)
 				}
 			}
 		}
-	}(wg)
+	}()
 
-	go func(wg *sync.WaitGroup) {
-		sig := <-sigs
-		fmt.Printf("\n%s\n", sig)
-		done <- true
-		wg.Done()
-	}(wg)
+	fs := http.FileServer(http.Dir("./out"))
 
-	wg.Wait()
+	http.Handle("/out/", http.StripPrefix("/out", fs))
+	log.Fatal(http.ListenAndServe(":53084", nil))
+
 	fmt.Println("exiting")
 
 }
@@ -184,7 +174,7 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 	svg = bytes.Replace(svg, []byte("ICON_MOON"), []byte(*current.MoonPhase.Value), -1)
 	svg = bytes.Replace(svg, []byte("DATE_STRING"), []byte(updatedTime), -1)
 
-	f, err := os.OpenFile("output.svg", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	f, err := os.OpenFile("out/output.svg", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return fmt.Errorf("error opening file: %v", err)
 	}
@@ -198,7 +188,7 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 	}
 
 	log.Printf("converting svg to png")
-	if err := exec.Command("rsvg-convert", "output.svg", "-b", "white", "-f", "png", "-o", "output.png").Run(); err != nil {
+	if err := exec.Command("rsvg-convert", "out/output.svg", "-b", "white", "-f", "png", "-o", "out/output.png").Run(); err != nil {
 		return fmt.Errorf("error convert svg to png: %v", err)
 	}
 	return nil
