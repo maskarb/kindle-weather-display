@@ -69,7 +69,7 @@
 <use xlink:href="#windarrow"/>
 </g>
 
-<g font-family="Cascadia Code">
+<g font-family="DejaVu Sans">
 
 <text style="text-anchor:start;" font-size="35px" y="40" x="410">Currently:</text>
 <text style="text-anchor:end;" font-size="90px" y="120" x="530">TEMP_NOW</text>
@@ -112,7 +112,7 @@
 <path d="M260,15 a1,1 0 1,0 30,0z"/>
 <path d="M250,365 l10,0 a1,1 0 1,0 0,-7 m-10,15 l15,0 a1,1 0 1,0 0,-7 m-15,15 l20,0 a1,1 0 1,0 0,-7" stroke='black' stroke-width='3' fill='none'/>
 
-<g font-family="Cascadia Code">
+<g font-family="DejaVu Sans">
 <text style="text-anchor:start;" font-size="20px" y="30" x="50">SUNRISE</text>
 <text style="text-anchor:start;" font-size="20px" y="30" x="300">SUNSET</text>
 <text style="text-anchor:start;" font-size="20px" y="380" x="35">MOON_PHASE</text>
