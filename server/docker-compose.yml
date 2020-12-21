@@ -5,8 +5,8 @@ services:
     image: kindle
     environment:
         - CLIMACELL_API_KEY=${CLIMACELL_API_KEY}
-        - LATITUDE=35.816735
-        - LONGITUDE=-78.613375
+        - LATITUDE=${LATITUDE}
+        - LONGITUDE=${LONGITUDE}
     build:
       context: .
       dockerfile: Dockerfile

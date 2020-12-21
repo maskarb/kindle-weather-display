@@ -9,17 +9,15 @@ RUN go mod download
 COPY main.go main.go
 COPY preprocess.svg preprocess.svg
 
-RUN CGO_ENABLED=0 GOOS=linux go build -o weather-script .
+RUN CGO_ENABLED=0 GOOS=linux go build -o kindle-server .
 
 FROM alpine
 
 WORKDIR /opt
 
-RUN apk add --no-cache ca-certificates librsvg && mkdir out
+RUN mkdir out && apk add --no-cache librsvg
 
-COPY --from=builder /usr/local/go/lib/time/zoneinfo.zip /usr/local/go/lib/time/zoneinfo.zip
-COPY --from=builder /workspace/weather-script /opt/
+COPY --from=builder /workspace/kindle-server /opt/
 COPY --from=builder /workspace/preprocess.svg /opt/
 
-
-CMD ["/opt/weather-script"]
+ENTRYPOINT ["/opt/kindle-server"]
