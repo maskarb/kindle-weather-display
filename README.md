@@ -10,14 +10,17 @@ From:
 * Uses the [ClimaCell Weather API](https://www.climacell.co/weather-api/) (requires a key)
 
 ## Dockerfile for Server
-* [https://hub.docker.com/r/jtslear/kindle-weather/](https://hub.docker.com/r/jtslear/kindle-weather/) <-- need to update this
+* [https://hub.docker.com/r/maskarb/kindle-weather-display/](https://hub.docker.com/r/maskarb/kindle-weather-display/) <-- need to update this
 * Server requires three environment variables:
   * `CLIMACELL_API_KEY`
   * `LATITUDE`
   * `LONGITUDE`
+* a `.env.example` is included. Copy the example to a `.env` file and update the variables.
 
 ### Example Run Server
-* `docker-compose up --build`
+```
+docker run --env-file .env maskarb/kindle-weather-display:kindle-server
+```
 
 ### Example get
 * `wget http://localhost:53084/out/output.png`

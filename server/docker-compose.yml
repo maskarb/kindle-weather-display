@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  kindle:
-    image: kindle
+  kindle-server:
+    image: kindle-server
     environment:
         - CLIMACELL_API_KEY=${CLIMACELL_API_KEY}
         - LATITUDE=${LATITUDE}

@@ -174,6 +174,13 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 	svg = bytes.Replace(svg, []byte("ICON_MOON"), []byte(*current.MoonPhase.Value), -1)
 	svg = bytes.Replace(svg, []byte("DATE_STRING"), []byte(updatedTime), -1)
 
+	if _, err := os.Stat("out"); os.IsNotExist(err) {
+		log.Printf("creating `out` folder")
+		if err := os.Mkdir("out", 0777); err != nil {
+			return fmt.Errorf("cannot create `out` folder: %v", err)
+		}
+	}
+
 	f, err := os.OpenFile("out/output.svg", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return fmt.Errorf("error opening file: %v", err)
@@ -191,6 +198,7 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 	if err := exec.Command("rsvg-convert", "out/output.svg", "-b", "white", "-f", "png", "-o", "out/output.png").Run(); err != nil {
 		return fmt.Errorf("error convert svg to png: %v", err)
 	}
+	log.Printf("created .png output")
 	return nil
 
 }
@@ -204,6 +212,6 @@ func getIcon(i string) string {
 }
 
 func getMoonPhase(i string) string {
-	s := strings.Split(i, "_")
-	return strings.Title(s[0])
+	s := strings.Replace(i, "_", " ", -1)
+	return strings.Title(s)
 }
