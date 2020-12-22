@@ -15,11 +15,13 @@ From:
   * `CLIMACELL_API_KEY`
   * `LATITUDE`
   * `LONGITUDE`
+  * `TIMEZONE` (default is UTC)
+  * `CRON_SCHEDULE` (default is `*/5 * * * *`)
 * a `.env.example` is included. Copy the example to a `.env` file and update the variables.
 
 ### Example Run Server
 ```
-docker run --env-file .env maskarb/kindle-weather-display:kindle-server
+docker run -p 53084:53084 --env-file .env maskarb/kindle-weather-display:kindle-server
 ```
 
 ### Example get
