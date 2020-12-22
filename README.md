@@ -10,7 +10,7 @@ From:
 * Uses the [ClimaCell Weather API](https://www.climacell.co/weather-api/) (requires a key)
 
 ## Dockerfile for Server
-* [https://hub.docker.com/r/maskarb/kindle-weather-display/](https://hub.docker.com/r/maskarb/kindle-weather-display/) <-- need to update this
+* [https://hub.docker.com/r/maskarb/kindle-weather-display/](https://hub.docker.com/r/maskarb/kindle-weather-display/)
 * Server requires three environment variables:
   * `CLIMACELL_API_KEY`
   * `LATITUDE` (default is 35.780361)
