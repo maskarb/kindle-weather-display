@@ -111,7 +111,7 @@ func validateCronSpec(spec string) cron.Schedule {
 
 func init() {
 	logrus.SetFormatter(&logrus.TextFormatter{})
-	tz := getEnvString("TIMEZONE", "EST")
+	tz := getEnvString("TIMEZONE", "UTC")
 
 	var err error
 	location, err = time.LoadLocation(tz)
@@ -220,6 +220,8 @@ func (f *FileGenerator) genFile() error {
 	svg = bytes.Replace(svg, []byte("ICON_THREE"), []byte(getWeatherIcon(*in2days.WeatherCode.Value)), -1)
 	svg = bytes.Replace(svg, []byte("ICON_FOUR"), []byte(getWeatherIcon(*in3days.WeatherCode.Value)), -1)
 	svg = bytes.Replace(svg, []byte("ICON_MOON"), []byte(*current.MoonPhase.Value), -1)
+	svg = bytes.Replace(svg, []byte("LATITUDE"), []byte(strconv.FormatFloat(f.loc.Lat, 'f', 3, 64)), -1)
+	svg = bytes.Replace(svg, []byte("LONGITUDE"), []byte(strconv.FormatFloat(f.loc.Lon, 'f', 3, 64)), -1)
 	svg = bytes.Replace(svg, []byte("DATE_STRING"), []byte(updatedTime), -1)
 
 	if _, err := os.Stat("out"); os.IsNotExist(err) {

@@ -114,6 +114,8 @@
 
 <g font-family="DejaVu Sans">
 <text style="text-anchor:start;" font-size="20px" y="30" x="50">SUNRISE</text>
+<text style="text-anchor:middle;" font-size="8px" y="20" x="190">Location:</text>
+<text style="text-anchor:middle;" font-size="8px" y="30" x="190">LATITUDE,LONGITUDE</text>
 <text style="text-anchor:start;" font-size="20px" y="30" x="300">SUNSET</text>
 <text style="text-anchor:start;" font-size="20px" y="380" x="35">MOON_PHASE</text>
 <text style="text-anchor:start;" font-size="20px" y="380" x="280">WIND_SPEEDmph</text>
