@@ -28,3 +28,6 @@ docker run -p 53084:53084 --env-file .env maskarb/kindle-weather-display:kindle-
 
 ### Example get
 * `wget http://localhost:53084/out/output.png`
+
+### Weather icons
+This project uses the ClimaCell icons found [here](https://github.com/ClimaCell-API/weather-code-icons).

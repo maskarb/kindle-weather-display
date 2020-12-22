@@ -26,7 +26,8 @@ var (
 	hourlyFields   = "precipitation,precipitation_type,precipitation_probability,temp,feels_like,dewpoint,wind_speed,wind_gust,baro_pressure,visibility,humidity,wind_direction,sunrise,sunset,cloud_cover,cloud_ceiling,cloud_base,surface_shortwave_radiation,moon_phase,weather_code"
 	dailyFields    = "precipitation,precipitation_accumulation,temp,feels_like,wind_speed,baro_pressure,visibility,humidity,wind_direction,sunrise,sunset,moon_phase,weather_code,dewpoint"
 
-	iconMap = map[string]string{
+	dayNight = []string{"clear", "mostly_clear", "partly_cloudy"}
+	iconMap  = map[string]string{
 		// "clear-day":           "skc",
 		// "clear-night":         "skc",
 		// "rain":                "ra",
@@ -51,16 +52,16 @@ var (
 		"flurries":            "sn",
 		"tstorm":              "tsra",
 		"rain_heavy":          "rh",
-		"rain":                "ra",
+		"rain":                "rain",
 		"rain_light":          "shra",
 		"drizzle":             "d",
 		"fog_light":           "sctfg",
 		"fog":                 "fg",
-		"cloudy":              "ovc",
+		"cloudy":              "cloudy",
 		"mostly_cloudy":       "bkn",
 		"partly_cloudy":       "sct",
 		"mostly_clear":        "few",
-		"clear":               "skc",
+		"clear":               "clear_day",
 	}
 )
 
@@ -84,12 +85,20 @@ func getEnvAsFloat64(key string, defaultVal float64) float64 {
 	return defaultVal
 }
 
-func getWeatherIcon(i string) string {
-	icon, ok := iconMap[i]
-	if !ok {
-		return "mist"
+func getDayOrNight(current, rise, set time.Time) string {
+	if rise.Before(current) && current.Before(set) {
+		return "day"
 	}
-	return icon
+	return "night"
+}
+
+func getWeatherIcon(i, daytime string) string {
+	for _, v := range dayNight {
+		if i == v {
+			return i + "_" + daytime
+		}
+	}
+	return i
 }
 
 func getMoonPhase(i string) string {
@@ -174,6 +183,8 @@ func (f *FileGenerator) genFile() error {
 		return fmt.Errorf("error getting realTime data: %v", err)
 	}
 
+	dayOrNight := getDayOrNight(start, *current.Sunrise.Value, *current.Sunset.Value)
+
 	logrus.Info("getting daily forecast data")
 	daily, err := f.c.DailyForecast(climacell.ForecastArgs{
 		Location:   f.loc,
@@ -215,10 +226,10 @@ func (f *FileGenerator) genFile() error {
 	svg = bytes.Replace(svg, []byte("DAY_TWO"), []byte(tomorrow.ObservationTime.Value.Weekday().String()), -1)
 	svg = bytes.Replace(svg, []byte("DAY_THREE"), []byte(in2days.ObservationTime.Value.Weekday().String()), -1)
 	svg = bytes.Replace(svg, []byte("DAY_FOUR"), []byte(in3days.ObservationTime.Value.Weekday().String()), -1)
-	svg = bytes.Replace(svg, []byte("ICON_ONE"), []byte(getWeatherIcon(*current.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_TWO"), []byte(getWeatherIcon(*tomorrow.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_THREE"), []byte(getWeatherIcon(*in2days.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_FOUR"), []byte(getWeatherIcon(*in3days.WeatherCode.Value)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_ONE"), []byte(getWeatherIcon(*current.WeatherCode.Value, dayOrNight)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_TWO"), []byte(*tomorrow.WeatherCode.Value), -1)
+	svg = bytes.Replace(svg, []byte("ICON_THREE"), []byte(*in2days.WeatherCode.Value), -1)
+	svg = bytes.Replace(svg, []byte("ICON_FOUR"), []byte(*in3days.WeatherCode.Value), -1)
 	svg = bytes.Replace(svg, []byte("ICON_MOON"), []byte(*current.MoonPhase.Value), -1)
 	svg = bytes.Replace(svg, []byte("LATITUDE"), []byte(strconv.FormatFloat(f.loc.Lat, 'f', 3, 64)), -1)
 	svg = bytes.Replace(svg, []byte("LONGITUDE"), []byte(strconv.FormatFloat(f.loc.Lon, 'f', 3, 64)), -1)
