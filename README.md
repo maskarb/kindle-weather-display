@@ -11,8 +11,10 @@ From:
 
 ## Dockerfile for Server
 * [https://hub.docker.com/r/maskarb/kindle-weather-display/](https://hub.docker.com/r/maskarb/kindle-weather-display/)
-* Server requires three environment variables:
+* The following environment variables should be set:
+  #### Required:
   * `CLIMACELL_API_KEY`
+  #### Optional:
   * `LATITUDE` (default is 35.780361)
   * `LONGITUDE` (default is -78.639111)
   * `TIMEZONE` (default is UTC)
