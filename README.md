@@ -13,8 +13,8 @@ From:
 * [https://hub.docker.com/r/maskarb/kindle-weather-display/](https://hub.docker.com/r/maskarb/kindle-weather-display/) <-- need to update this
 * Server requires three environment variables:
   * `CLIMACELL_API_KEY`
-  * `LATITUDE`
-  * `LONGITUDE`
+  * `LATITUDE` (default is 35.780361)
+  * `LONGITUDE` (default is -78.639111)
   * `TIMEZONE` (default is UTC)
   * `CRON_SCHEDULE` (default is `*/5 * * * *`)
 * a `.env.example` is included. Copy the example to a `.env` file and update the variables.

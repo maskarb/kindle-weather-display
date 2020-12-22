@@ -128,8 +128,8 @@ func main() {
 	filegen := &FileGenerator{
 		c: climacell.New(getEnvString("CLIMACELL_API_KEY", "")),
 		loc: &climacell.LatLon{
-			Lat: getEnvAsFloat64("LATITUDE", 0),
-			Lon: getEnvAsFloat64("LONGITUDE", 0),
+			Lat: getEnvAsFloat64("LATITUDE", 35.780361),
+			Lon: getEnvAsFloat64("LONGITUDE", -78.639111),
 		},
 		sched: schedule,
 	}
