@@ -65,7 +65,7 @@
 <use xlink:href="#ICON_MOON"/>
 </g>
 
-<g transform="scale(1.0) translate(340 360) rotate(WIND_DIR, 12, 12)">
+<g transform="scale(1.0) translate(350 360) rotate(WIND_DIR, 12, 12)">
 <use xlink:href="#windarrow"/>
 </g>
 

@@ -4,18 +4,22 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
 	"time"
+	_ "time/tzdata"
 
 	"github.com/andyhaskell/climacell-go"
+	"github.com/robfig/cron"
+	"github.com/sirupsen/logrus"
 )
 
 var (
+	location    *time.Location
+	defaultCron = "*/5 * * * *"
 	// extra          = "pm25,pm10,o3,no2,co,so2,epa_aqi,epa_primary_pollutant,epa_health_concern,pollen_tree,pollen_weed,pollen_grass,road_risk_score,road_risk,road_risk_confidence,road_risk_conditions,fire_index,hail_binary"
 
 	realTimeFields = "precipitation,precipitation_type,temp,feels_like,dewpoint,wind_speed,wind_gust,baro_pressure,visibility,humidity,wind_direction,sunrise,sunset,cloud_cover,cloud_ceiling,cloud_base,surface_shortwave_radiation,moon_phase,weather_code"
@@ -63,7 +67,8 @@ var (
 func getEnvString(key string, defaultVal string) string {
 	valueStr, exists := os.LookupEnv(key)
 	if !exists {
-		log.Printf("env variable %s not defined", key)
+		logrus.Infof("env variable %s not defined. Using default: %s", key, defaultVal)
+		return defaultVal
 	}
 	return valueStr
 }
@@ -71,7 +76,7 @@ func getEnvString(key string, defaultVal string) string {
 func getEnvAsFloat64(key string, defaultVal float64) float64 {
 	valueStr, exists := os.LookupEnv(key)
 	if !exists {
-		log.Printf("env variable %s not defined", key)
+		logrus.Infof("env variable %s not defined. Using default: %d", key, defaultVal)
 	}
 	if value, err := strconv.ParseFloat(valueStr, 64); err == nil {
 		return value
@@ -79,46 +84,89 @@ func getEnvAsFloat64(key string, defaultVal float64) float64 {
 	return defaultVal
 }
 
-func main() {
-	var c *climacell.Client
-	c = climacell.New(getEnvString("CLIMACELL_API_KEY", ""))
-	loc := &climacell.LatLon{
-		Lat: getEnvAsFloat64("LATITUDE", 0),
-		Lon: getEnvAsFloat64("LONGITUDE", 0),
+func getWeatherIcon(i string) string {
+	icon, ok := iconMap[i]
+	if !ok {
+		return "mist"
 	}
-
-	if err := genFile(c, loc); err != nil {
-		log.Printf("output is jacked, probably: %v", err)
-	}
-
-	ticker := time.NewTicker(60 * time.Second)
-
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				if err := genFile(c, loc); err != nil {
-					log.Printf("output is jacked, probably: %v", err)
-				}
-			}
-		}
-	}()
-
-	fs := http.FileServer(http.Dir("./out"))
-
-	http.Handle("/out/", http.StripPrefix("/out", fs))
-	log.Fatal(http.ListenAndServe(":53084", nil))
-
-	fmt.Println("exiting")
-
+	return icon
 }
 
-func genFile(c *climacell.Client, loc *climacell.LatLon) error {
+func getMoonPhase(i string) string {
+	s := strings.Replace(i, "_", " ", -1)
+	return strings.Title(s)
+}
+
+func validateCronSpec(spec string) cron.Schedule {
+	s, err := cron.ParseStandard(spec)
+	if err != nil {
+		logrus.Infof("using default schedule `%s`. Cron spec schedule `%s` not valid: %v", defaultCron, spec, err)
+		s, err = cron.ParseStandard(defaultCron)
+		if err != nil {
+			logrus.Fatalf("failed to parse default schedule: %v", err)
+		}
+	}
+	return s
+}
+
+func init() {
+	logrus.SetFormatter(&logrus.TextFormatter{})
+	tz := getEnvString("TIMEZONE", "EST")
+
+	var err error
+	location, err = time.LoadLocation(tz)
+	if err != nil {
+		logrus.Infof("defaulting to UTC: timezone %s not found: %v", tz, err)
+		location = time.UTC
+	}
+}
+
+func main() {
+	strSpec := getEnvString("CRON_SCHEDULE", defaultCron)
+	schedule := validateCronSpec(strSpec)
+
+	filegen := &FileGenerator{
+		c: climacell.New(getEnvString("CLIMACELL_API_KEY", "")),
+		loc: &climacell.LatLon{
+			Lat: getEnvAsFloat64("LATITUDE", 0),
+			Lon: getEnvAsFloat64("LONGITUDE", 0),
+		},
+		sched: schedule,
+	}
+
+	if err := filegen.genFile(); err != nil {
+		logrus.Info("output is jacked, probably: %v", err)
+	}
+
+	cron := cron.New()
+	cron.Schedule(filegen.sched, filegen)
+	logrus.Infof("starting cronjob on schedule: %s", strSpec)
+	cron.Start()
+
+	fs := http.FileServer(http.Dir("./out"))
+	http.Handle("/out/", http.StripPrefix("/out", fs))
+	logrus.Fatal(http.ListenAndServe(":53084", nil))
+	logrus.Info("exiting")
+}
+
+type FileGenerator struct {
+	c     *climacell.Client
+	loc   *climacell.LatLon
+	sched cron.Schedule
+}
+
+func (f *FileGenerator) Run() {
+	if err := f.genFile(); err != nil {
+		logrus.Errorf("failed to generate file: %v", err)
+	}
+}
+
+func (f *FileGenerator) genFile() error {
 	start := time.Now()
 
-	log.Printf("getting realtime data")
-	current, err := c.RealTime(climacell.ForecastArgs{
-		Location:   loc,
+	logrus.Info("getting realtime data")
+	current, err := f.c.RealTime(climacell.ForecastArgs{
+		Location:   f.loc,
 		UnitSystem: "us",
 		Fields:     []string{realTimeFields},
 	})
@@ -126,9 +174,9 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 		return fmt.Errorf("error getting realTime data: %v", err)
 	}
 
-	log.Printf("getting daily forecast data")
-	daily, err := c.DailyForecast(climacell.ForecastArgs{
-		Location:   loc,
+	logrus.Info("getting daily forecast data")
+	daily, err := f.c.DailyForecast(climacell.ForecastArgs{
+		Location:   f.loc,
 		UnitSystem: "us",
 		Fields:     []string{dailyFields},
 		Start:      start,
@@ -138,7 +186,7 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 		return fmt.Errorf("error getting forecast data: %v", err)
 	}
 
-	updatedTime := start.Format("Monday Jan 2 15:04")
+	updatedTime := start.In(location).Format("Monday Jan 2, 15:04 MST")
 
 	svg, err := ioutil.ReadFile("./preprocess.svg")
 	if err != nil {
@@ -167,51 +215,38 @@ func genFile(c *climacell.Client, loc *climacell.LatLon) error {
 	svg = bytes.Replace(svg, []byte("DAY_TWO"), []byte(tomorrow.ObservationTime.Value.Weekday().String()), -1)
 	svg = bytes.Replace(svg, []byte("DAY_THREE"), []byte(in2days.ObservationTime.Value.Weekday().String()), -1)
 	svg = bytes.Replace(svg, []byte("DAY_FOUR"), []byte(in3days.ObservationTime.Value.Weekday().String()), -1)
-	svg = bytes.Replace(svg, []byte("ICON_ONE"), []byte(getIcon(*current.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_TWO"), []byte(getIcon(*tomorrow.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_THREE"), []byte(getIcon(*in2days.WeatherCode.Value)), -1)
-	svg = bytes.Replace(svg, []byte("ICON_FOUR"), []byte(getIcon(*in3days.WeatherCode.Value)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_ONE"), []byte(getWeatherIcon(*current.WeatherCode.Value)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_TWO"), []byte(getWeatherIcon(*tomorrow.WeatherCode.Value)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_THREE"), []byte(getWeatherIcon(*in2days.WeatherCode.Value)), -1)
+	svg = bytes.Replace(svg, []byte("ICON_FOUR"), []byte(getWeatherIcon(*in3days.WeatherCode.Value)), -1)
 	svg = bytes.Replace(svg, []byte("ICON_MOON"), []byte(*current.MoonPhase.Value), -1)
 	svg = bytes.Replace(svg, []byte("DATE_STRING"), []byte(updatedTime), -1)
 
 	if _, err := os.Stat("out"); os.IsNotExist(err) {
-		log.Printf("creating `out` folder")
+		logrus.Info("creating `out` folder")
 		if err := os.Mkdir("out", 0777); err != nil {
 			return fmt.Errorf("cannot create `out` folder: %v", err)
 		}
 	}
 
-	f, err := os.OpenFile("out/output.svg", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	output, err := os.OpenFile("out/output.svg", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		return fmt.Errorf("error opening file: %v", err)
 	}
-	if _, err := f.Write(svg); err != nil {
+	if _, err := output.Write(svg); err != nil {
 		return fmt.Errorf("error writing file: %v", err)
 	}
 
-	log.Printf("writing output to svg")
-	if err := f.Close(); err != nil {
+	logrus.Info("writing output to svg")
+	if err := output.Close(); err != nil {
 		return fmt.Errorf("error closing file: %v", err)
 	}
 
-	log.Printf("converting svg to png")
+	logrus.Info("converting svg to png")
 	if err := exec.Command("rsvg-convert", "out/output.svg", "-b", "white", "-f", "png", "-o", "out/output.png").Run(); err != nil {
 		return fmt.Errorf("error convert svg to png: %v", err)
 	}
-	log.Printf("created .png output")
+	logrus.Info("created .png output")
 	return nil
 
-}
-
-func getIcon(i string) string {
-	icon, ok := iconMap[i]
-	if !ok {
-		return "mist"
-	}
-	return icon
-}
-
-func getMoonPhase(i string) string {
-	s := strings.Replace(i, "_", " ", -1)
-	return strings.Title(s)
 }
