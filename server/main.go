@@ -210,8 +210,8 @@ func (f *FileGenerator) genFile() error {
 	in3days := daily[3]
 
 	svg = bytes.Replace(svg, []byte("TEMP_NOW"), []byte(strconv.FormatFloat(*current.Temp.Value, 'f', 0, 64)), -1)
-	svg = bytes.Replace(svg, []byte("SUNRISE"), []byte(current.Sunrise.Value.Local().Format(time.Kitchen)), -1)
-	svg = bytes.Replace(svg, []byte("SUNSET"), []byte(current.Sunset.Value.Local().Format(time.Kitchen)), -1)
+	svg = bytes.Replace(svg, []byte("SUNRISE"), []byte(current.Sunrise.Value.In(location).Format(time.Kitchen)), -1)
+	svg = bytes.Replace(svg, []byte("SUNSET"), []byte(current.Sunset.Value.In(location).Format(time.Kitchen)), -1)
 	svg = bytes.Replace(svg, []byte("MOON_PHASE"), []byte(getMoonPhase(*current.MoonPhase.Value)), -1)
 	svg = bytes.Replace(svg, []byte("WIND_SPEED"), []byte(strconv.FormatFloat(*current.WindSpeed.Value, 'f', 0, 64)), -1)
 	svg = bytes.Replace(svg, []byte("WIND_DIR"), []byte(strconv.FormatFloat(*current.WindDirection.Value, 'f', 0, 64)), -1)
