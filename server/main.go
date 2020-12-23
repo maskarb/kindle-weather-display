@@ -260,6 +260,11 @@ func (f *FileGenerator) genFile() error {
 		return fmt.Errorf("error convert svg to png: %v", err)
 	}
 	logrus.Info("created .png output")
+	logrus.Info("crushing .png")
+	if err := exec.Command("pngcrush", "-c", "0", "-ow", "out/output.png").Run(); err != nil {
+		return fmt.Errorf("error crushing png: %v", err)
+	}
+	logrus.Info("crushed .png")
 	return nil
 
 }

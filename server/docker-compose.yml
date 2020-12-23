@@ -3,10 +3,13 @@ version: '3'
 services:
   kindle-server:
     image: kindle-server
+    restart: always
     environment:
         - CLIMACELL_API_KEY=${CLIMACELL_API_KEY}
         - LATITUDE=${LATITUDE}
         - LONGITUDE=${LONGITUDE}
+        - TIMEZONE=${TIMEZONE}
+        - CRON_SCHEDULE=${CRON_SCHEDULE}
     build:
       context: .
       dockerfile: Dockerfile

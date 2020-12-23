@@ -15,7 +15,7 @@ FROM alpine
 
 WORKDIR /opt
 
-RUN apk add --no-cache tzdata ttf-dejavu librsvg
+RUN apk add --no-cache tzdata ttf-dejavu librsvg pngcrush
 
 COPY --from=builder /workspace/kindle-server /opt/
 COPY --from=builder /workspace/preprocess.svg /opt/
