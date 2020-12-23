@@ -23,7 +23,7 @@ From:
 
 ### Example Run Server
 ```
-docker run -p 53084:53084 --env-file .env maskarb/kindle-weather-display:kindle-server
+docker run -p 53084:53084 --env-file .env maskarb/kindle-weather-display:latest
 ```
 
 ### Example get
