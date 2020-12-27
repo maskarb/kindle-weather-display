@@ -27,42 +27,6 @@ var (
 	dailyFields    = "precipitation,precipitation_accumulation,temp,feels_like,wind_speed,baro_pressure,visibility,humidity,wind_direction,sunrise,sunset,moon_phase,weather_code,dewpoint"
 
 	dayNight = []string{"clear", "mostly_clear", "partly_cloudy"}
-	iconMap  = map[string]string{
-		// "clear-day":           "skc",
-		// "clear-night":         "skc",
-		// "rain":                "ra",
-		// "snow":                "sn",
-		// "sleet":               "fzra",
-		// "wind":                "wind",
-		// "fog":                 "fg",
-		// "cloudy":              "ovc",
-		// "partly-cloudy-day":   "few",
-		// "partly-cloudy-night": "few",
-
-		"freezing_rain_heavy": "frh",
-		"freezing_rain":       "fzra",
-		"freezing_rain_light": "frl",
-		"freezing_drizzle":    "fd",
-		"ice_pellets_heavy":   "iph",
-		"ice_pellets":         "ip",
-		"ice_pellets_light":   "ipl",
-		"snow_heavy":          "sn",
-		"snow":                "sn",
-		"snow_light":          "sn",
-		"flurries":            "sn",
-		"tstorm":              "tsra",
-		"rain_heavy":          "rh",
-		"rain":                "rain",
-		"rain_light":          "shra",
-		"drizzle":             "d",
-		"fog_light":           "sctfg",
-		"fog":                 "fg",
-		"cloudy":              "cloudy",
-		"mostly_cloudy":       "bkn",
-		"partly_cloudy":       "sct",
-		"mostly_clear":        "few",
-		"clear":               "clear_day",
-	}
 )
 
 func getEnvString(key string, defaultVal string) string {
@@ -474,7 +438,7 @@ const svgOutput = `
 <path id="waning_crescent" d="M48,34c-7.72,0-14,6.28-14,14s6.28,14,14,14c7.72,0,14-6.28,14-14S55.72,34,48,34z M38,48c0-5.292,4.136-9.625,9.342-9.967C44.123,40.182,42,43.838,42,48s2.123,7.818,5.342,9.967C42.136,57.625,38,53.292,38,48z"/>
 </defs>
 
-<g transform="translate(20 20) scale(15)">
+<g transform="translate(32 26) scale(14)">
 	<use xlink:href="#{{.IconOne}}"/>
 </g>
 
